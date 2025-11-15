@@ -1,0 +1,44 @@
+services:
+  php-fpm:
+    build:
+      context: docker/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/var/www/laravel
+    entrypoint: ["sh", "-c", "chown -R www-data:www-data /var/www/laravel
+                && chmod -R 775 /var/www/laravel/storage
+                /var/www/laravel/bootstrap/cache
+                /var/www/laravel/storage/framework/views && exec php-fpm"]
+    networks:
+      - shop
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8000:80"
+    volumes:
+      - ./src:/var/www/laravel
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php-fpm
+    networks:
+      - shop
+  mysql:
+    image: mysql:8.4
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: shop
+    ports:
+      - "3316:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - shop
+  redis:
+    image: redis:latest
+    networks:
+      - shop
+networks:
+  shop:
+volumes:
+  dbdata:
