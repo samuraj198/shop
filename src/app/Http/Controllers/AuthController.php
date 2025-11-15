@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\RegisterUserRequest;
 use App\Services\UserService;
-use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -16,8 +15,7 @@ class AuthController extends Controller
         $data = $request->validated();
         $user = $this->service->register($data);
 
-        return redirect()
-            ->route('/')
+        return redirect('/')
             ->with('success', 'Вы успешно зарегистрировались. Вход выполнен!');
     }
 
@@ -31,7 +29,7 @@ class AuthController extends Controller
                 ->back()
                 ->withErrors(['Возможно вы ввели неверные данные или такого пользователя не существует']);
         }
-        return redirect()->route('/')->with('success', 'Авторизация прошла успешно');
+        return redirect('/')->with('success', 'Авторизация прошла успешно');
     }
     public function logout()
     {
@@ -39,6 +37,6 @@ class AuthController extends Controller
         if ($logout === false) {
             return redirect()->back()->withErrors(['При выходе из аккаунта произошла ошибка']);
         }
-        return redirect()->route('/')->with('success', 'Вы успешно вышли из аккаунта');
+        return redirect('/')->with('success', 'Вы успешно вышли из аккаунта');
     }
 }

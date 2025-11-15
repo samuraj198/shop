@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 
 class UserService
 {
@@ -14,7 +13,6 @@ class UserService
     public function register($data)
     {
         $user = $this->repository->register($data);
-        Mail::to($user);
         Auth::login($user);
 
         return $user;
@@ -22,7 +20,7 @@ class UserService
 
     public function login($data)
     {
-        if (Auth::attempt($data->email, $data->password)) {
+        if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
             return true;
         }
         return false;
