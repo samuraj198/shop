@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Models\Category;
 use App\Repositories\Interfaces\Repository;
-use function Sodium\increment;
 
 class CategoryRepository implements Repository
 {
@@ -13,20 +12,5 @@ class CategoryRepository implements Repository
         $category = Category::create($data);
 
         return $category;
-    }
-
-    public function get(int $id): Category
-    {
-        $category = Category::findOrFail($id);
-
-        return $category;
-    }
-
-    public function destroy(int $id): bool
-    {
-        if (Category::destroy($id)) {
-            return true;
-        }
-        return false;
     }
 }

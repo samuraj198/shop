@@ -20,20 +20,17 @@ class CategoryService
         return $category;
     }
 
-    public function update(int $id, string $name): Category
+    public function update(Category $category, string $name): Category
     {
-        $category = $this->repository->get($id);
         $category->update(['name' => $name]);
 
         return $category;
     }
 
-    public function destroy(int $id): string
+    public function destroy(Category $category): bool
     {
-        $check = $this->repository->destroy($id);
-        if ($check) {
-            return 'Вы успешно удалили категорию';
-        }
-        return 'Не удалось удалить категорию';
+        $category->delete();
+
+        return true;
     }
 }
