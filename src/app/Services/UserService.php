@@ -2,17 +2,14 @@
 
 namespace App\Services;
 
-use App\Repositories\UserRepository;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class UserService
 {
-    public function __construct(private UserRepository $repository)
-    {}
-
     public function register($data)
     {
-        $user = $this->repository->register($data);
+        $user = User::create($data);
         Auth::login($user);
 
         return $user;

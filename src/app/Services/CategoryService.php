@@ -3,19 +3,12 @@
 namespace App\Services;
 
 use App\Models\Category;
-use App\Repositories\CategoryRepository;
 
 class CategoryService
 {
-    /**
-     * Create a new class instance.
-     */
-    public function __construct(private CategoryRepository $repository)
-    {}
-
     public function store(array $data): Category
     {
-        $category = $this->repository->store($data);
+        $category = Category::create($data);
 
         return $category;
     }
