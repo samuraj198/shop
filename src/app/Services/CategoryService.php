@@ -26,4 +26,14 @@ class CategoryService
 
         return true;
     }
+
+    public function incrementCount(int $id): void
+    {
+        Category::where('id', $id)->increment('count');
+    }
+
+    public function decrementCount(int $id): void
+    {
+        Category::where('id', $id)->decrement('count');
+    }
 }
