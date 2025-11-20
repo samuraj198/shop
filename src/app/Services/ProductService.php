@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Product;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class ProductService
 {
@@ -11,6 +13,11 @@ class ProductService
 
     public function store(array $data): Product
     {
+        if (isset($data['img']) && $data['img'] instanceof UploadedFile) {
+            $imgName = $this->createNameForImage($data['img']);
+            $data['img']->storeAs('products', $imgName, 'public');
+            $data['img'] = $imgName;
+        }
         $product = Product::create($data);
         $this->categoryService->incrementCount($product->category_id);
         return $product;
@@ -20,6 +27,13 @@ class ProductService
     {
         $oldCategoryId = $product->category_id;
         $newCategoryId = $data['category_id'];
+
+        if (isset($data['img']) && $data['img'] instanceof UploadedFile) {
+            Storage::disk('public')->delete('products/' . $product->img);
+            $imgName = $this->createNameForImage($data['img']);
+            $data['img']->storeAs('products', $imgName, 'public');
+            $data['img'] = $imgName;
+        }
 
         if ($oldCategoryId != $newCategoryId) {
             $this->categoryService->decrementCount($oldCategoryId);
@@ -32,7 +46,14 @@ class ProductService
     public function destroy(Product $product): bool
     {
         $this->categoryService->decrementCount($product->category_id);
+        Storage::disk('public')->delete('products/' . $product->img);
 
         return $product->delete();
+    }
+
+    private function createNameForImage($img): string
+    {
+        $name = $img->getClientOriginalName();
+        return $name . '_' . time() . '.' . $img->getClientOriginalExtension();
     }
 }

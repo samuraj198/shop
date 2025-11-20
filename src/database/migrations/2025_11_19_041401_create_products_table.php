@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->integer('price');
-            $table->integer('discount');
+            $table->integer('discount')->nullable();
             $table->json('specifications');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->timestamps();
