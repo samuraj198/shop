@@ -7,6 +7,7 @@ use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ProductTest extends TestCase
@@ -17,7 +18,7 @@ class ProductTest extends TestCase
     {
         $category = Category::create(['name' => 'Phones']);
 
-        $uploadedFile = UploadedFile::fake()->create('testImg_2132131.jpg', 1024);
+        $uploadedFile = UploadedFile::fake()->create('testImg.jpg', 1024);
         $data = [
             'name' => 'Iphone X white',
             'img' => $uploadedFile,
@@ -31,13 +32,18 @@ class ProductTest extends TestCase
             'category_id' => $category->id,
         ];
         $response = $this->post('/products', $data);
+        $product = Product::where('name', $data['name'])->first();
 
         $this->assertDatabaseHas('products', [
             'name' => 'Iphone X white',
             'category_id' => $category->id,
         ]);
         $this->assertEquals(1, $category->fresh()->count);
+        Storage::disk('public')->assertExists('products/' . $product->img);
+        $this->assertNotNull($product->img);
         $response->assertRedirect('/');
+
+        Storage::disk('public')->delete('products/' . $uploadedFile);
     }
 
     public function test_update_product()
@@ -79,6 +85,7 @@ class ProductTest extends TestCase
             'category_id' => $category->id,
         ]);
         $response->assertRedirect('/');
+        Storage::disk('public')->delete('products/' . $uploadedFile);
     }
 
     public function test_delete_product()
@@ -105,5 +112,7 @@ class ProductTest extends TestCase
         ]);
         $this->assertEquals(0, $category->fresh()->count);
         $response->assertRedirect('/');
+
+        Storage::disk('public')->delete('products/' . $uploadedFile);
     }
 }

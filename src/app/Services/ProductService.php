@@ -53,7 +53,7 @@ class ProductService
 
     private function createNameForImage($img): string
     {
-        $name = $img->getClientOriginalName();
+        $name = pathinfo($img->getClientOriginalName(), PATHINFO_FILENAME);
         return $name . '_' . time() . '.' . $img->getClientOriginalExtension();
     }
 }
