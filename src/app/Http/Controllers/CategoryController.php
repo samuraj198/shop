@@ -24,7 +24,7 @@ class CategoryController extends Controller
     public function update(UpdateCategoryRequest $request, Category $category)
     {
         $data = $request->validated();
-        $category = $this->service->update($category, $data['name']);
+        $category = $this->service->update($category, $data);
 
         return redirect('/')->with('success', 'Вы успешно обновили категорию');
     }
