@@ -55,7 +55,7 @@ class CategoryService
         Category::where('id', $id)->decrement('count');
     }
 
-    private function createNameForImage(UploadedFile $img): string
+    public function createNameForImage(UploadedFile $img): string
     {
         $name = pathinfo($img->getClientOriginalName(), PATHINFO_FILENAME);
         return $name . '_' . time() . '.' . $img->getClientOriginalExtension();
