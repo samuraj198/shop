@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Storage;
 
 class CategoryService
 {
+    public function getPopular()
+    {
+        return Category::orderBy('count', 'desc')->limit(4);
+    }
+
     public function store(array $data): Category
     {
         if (isset($data['img']) && $data['img'] instanceof UploadedFile) {
