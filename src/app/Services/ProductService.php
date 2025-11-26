@@ -11,6 +11,11 @@ class ProductService
     public function __construct(private CategoryService $categoryService)
     {}
 
+    public function getForHomePage()
+    {
+        return Product::with('category')->limit(12);
+    }
+
     public function store(array $data): Product
     {
         if (isset($data['img']) && $data['img'] instanceof UploadedFile) {
