@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Product;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Storage;
 
 class ProductService
@@ -14,6 +15,20 @@ class ProductService
     public function getForHomePage()
     {
         return Product::with('category')->limit(12);
+    }
+
+    public function searchProducts(string $name = null, int $category_id = null): LengthAwarePaginator
+    {
+        $query = Product::query();
+        if ($name) {
+            $query->where('name', 'like', '%' . $name . '%');
+        }
+        if ($category_id) {
+            $query->where('category_id', $category_id);
+        }
+        $query->with('category');
+
+        return $query->paginate(16);
     }
 
     public function store(array $data): Product

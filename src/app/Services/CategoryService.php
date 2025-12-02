@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Storage;
 
 class CategoryService
 {
+    public function getCategories()
+    {
+        return Category::orderBy('count', 'desc')->get();
+    }
+
     public function getPopular()
     {
         return Category::orderBy('count', 'desc')->limit(4);

@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
@@ -21,3 +22,5 @@ Route::get('/cart', [ProductController::class, 'index']);
 Route::post('/cart/{product}', [CartController::class, 'store']);
 Route::put('/cart/{cartItem}', [CartController::class, 'update']);
 Route::delete('/cart/{cartItem}', [CartController::class, 'destroy']);
+
+Route::get('/catalog', [CatalogController::class, 'index'])->name('catalog');
