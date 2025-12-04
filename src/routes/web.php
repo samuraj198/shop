@@ -23,4 +23,4 @@ Route::post('/cart/{product}', [CartController::class, 'store']);
 Route::put('/cart/{cartItem}', [CartController::class, 'update']);
 Route::delete('/cart/{cartItem}', [CartController::class, 'destroy']);
 
-Route::get('/catalog', [CatalogController::class, 'index'])->name('catalog');
+Route::get('/catalog', [CatalogController::class, 'index']);
