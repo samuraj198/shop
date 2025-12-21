@@ -8,9 +8,14 @@ use Illuminate\Support\Facades\Storage;
 
 class CategoryService
 {
+    public function __construct(private CacheService $cacheService)
+    {}
+
     public function getCategories()
     {
-        return Category::orderBy('count', 'desc')->get();
+        $categories = $this->cacheService->getCachedCategories();
+
+        return $categories;
     }
 
     public function getPopular()
@@ -26,6 +31,7 @@ class CategoryService
             $data['img'] = $imgName;
         }
         $category = Category::create($data);
+        $this->cacheService->clearCachedCategories();
 
         return $category;
     }
@@ -38,6 +44,7 @@ class CategoryService
             $data['img'] = $imgName;
         }
         $category->update($data);
+        $this->cacheService->clearCachedCategories();
 
         return $category;
     }
@@ -46,6 +53,7 @@ class CategoryService
     {
         Storage::disk('public')->delete('categories/' . $category->img);
         $category->delete();
+        $this->cacheService->clearCachedCategories();
 
         return true;
     }
