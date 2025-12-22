@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
 
 class UserService
@@ -30,5 +31,10 @@ class UserService
             return true;
         }
         return false;
+    }
+
+    public function getRegisteredUser(): Authenticatable
+    {
+        return Auth::user();
     }
 }
